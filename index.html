@@ -4,156 +4,149 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pesan untuk Kamu</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     body {
+      text-align: center;
       font-family: Arial, sans-serif;
       background-color: #ffeef2;
       color: #ff7b94;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
     }
 
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 10px;
+    #password-form, #content, #thank-you-button {
+      margin: 20px auto;
     }
 
-    input[type="password"] {
-      padding: 10px;
-      border: 1px solid #ff7b94;
-      border-radius: 5px;
-      width: 80%;
-      max-width: 300px;
-      margin: 10px 0;
+    img {
+      width: 200px;
+      margin: 20px auto;
+    }
+
+    #messages {
+      margin: 20px auto;
+      font-size: 1.1em;
+      line-height: 1.5;
+      color: #333;
     }
 
     button {
       background-color: #ff7b94;
-      color: #fff;
+      color: white;
+      padding: 10px 20px;
       border: none;
       border-radius: 5px;
-      padding: 10px 20px;
-      font-size: 1em;
       cursor: pointer;
-      transition: transform 0.2s ease-in-out;
-    }
-
-    button:hover {
-      background-color: #ff5978;
-    }
-
-    #text-container {
-      margin-top: 20px;
-      font-size: 1.2em;
-      line-height: 1.8em;
-    }
-
-    #cute-image {
-      margin-top: 20px;
-      display: none;
-      width: 200px;
-      height: auto;
-      border-radius: 10px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      font-size: 1em;
     }
 
     #thank-you-button {
-      display: none;
       margin-top: 20px;
-      padding: 15px 30px;
-      background-color: #ff7b94;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      font-size: 1.2em;
-      cursor: pointer;
       animation: bubble 2s infinite;
-    }
-
-    #thank-you-button:hover {
-      background-color: #ff5978;
+      display: none;
     }
 
     @keyframes bubble {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.2);
-      }
-      100% {
-        transform: scale(1);
-      }
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      width: 80%;
+      max-width: 300px;
+      font-size: 1em;
     }
   </style>
 </head>
 <body>
-  <img id="cute-image" src="cantik.jpg" alt="Cantik">
-  <h1>Pesan untuk Kamu 💖</h1>
-  <form id="password-form">
-    <p>Masukkan password-nya dong cantik:</p>
-    <input type="password" id="password" placeholder="Masukkan password">
-    <button type="submit">Submit</button>
-  </form>
-  <div id="text-container"></div>
+  <h1>✨Buatan Andre✨</h1>
 
-  <button id="thank-you-button" onclick="window.location.href='https://wa.me/6282396328667?text=makasih+ya+ucapannya.+Love+you😘♥️'">
-    Tekan Aku
-  </button>
+  <!-- Form Input Password -->
+  <div id="password-form">
+    <p>Masukkan password-nya dong cantik:</p>
+    <input type="password" id="password-input" placeholder="Masukkan password">
+    <button onclick="verifyPassword()">Submit</button>
+  </div>
+
+  <!-- Konten yang Muncul Jika Password Benar -->
+  <div id="content" style="display: none;">
+    <img src="../cantik.jpg" alt="Gambar Cantik">
+    <div id="messages"></div>
+    <button id="thank-you-button" onclick="window.location.href='https://wa.me/6282396328667?text=makasih+ya+ucapannya.+Love+you😘♥️'">
+      Tekan Aku
+    </button>
+  </div>
 
   <script>
+    const passwordBenar = "buatFay@123";
     const messages = [
-      "Haloo cantikk",
-      "Jaga kesehatan yaa",
-      "Jangan begadang terus, nanti lama sembuhnyaa",
-      "Trus, makan yang teratur yaa",
-      "Jangann main hp muluu",
-      "Jangan lupa juga minum air",
-      "Stay Healthy yaa cantikk",
-      "Dari Andre, untuk kamuu"
+      "Haloo cantikk👋",
+      "Jaga kesehatan yaa😊",
+      "Jangan begadang terus, nanti lama sembuhnyaa😡",
+      "Trus, makan yang teratur yaa😉",
+      "Jangann main hp muluu😁",
+      "Jangan lupa juga minum air👌",
+      "Stay Healthy yaa cantikk🥰",
+      "Dari Andre, untuk kamuu♥️"
     ];
 
-    const delays = [3000, 500, 1300, 500, 1500, 1500, 2000, 3500];
+    function verifyPassword() {
+      const passwordInput = document.getElementById("password-input").value;
 
-    // Fungsi mengetikkan teks
-    async function typeMessage(message, container, delay) {
-      const p = document.createElement("p");
-      container.appendChild(p);
-      for (const char of message) {
-        p.textContent += char;
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
-
-    // Fungsi untuk memutar semua pesan
-    async function printMessages() {
-      const container = document.getElementById("text-container");
-      for (let i = 0; i < messages.length; i++) {
-        await typeMessage(messages[i], container, delays[i]);
-      }
-      // Tampilkan tombol "tekan aku" setelah semua pesan muncul
-      document.getElementById("thank-you-button").style.display = "block";
-    }
-
-    // Event listener untuk form
-    document.getElementById("password-form").addEventListener("submit", (event) => {
-      event.preventDefault();
-      const password = document.getElementById("password").value;
-      if (password === "buatFay@123") {
-        document.getElementById("password-form").style.display = "none";
-        // Tampilkan gambar setelah password benar
-        document.getElementById("cute-image").style.display = "block";
-        printMessages();
+      if (passwordInput === passwordBenar) {
+        Swal.fire({
+          title: 'Berhasil!',
+          text: 'Password benar!',
+          icon: 'success',
+          confirmButtonText: 'Lanjutkan'
+        }).then(() => {
+          showContent();
+        });
       } else {
-        alert("Password salah, coba lagi ya!");
+        Swal.fire({
+          title: 'Password Salah!',
+          text: 'Coba lagi yaa 😅',
+          icon: 'error',
+          confirmButtonText: 'Oke'
+        });
       }
-    });
+    }
+
+    async function showContent() {
+      document.getElementById("password-form").style.display = "none";
+      document.querySelector("#content").style.display = "block";
+
+      const container = document.querySelector("#messages");
+
+      for (let i = 0; i < messages.length; i++) {
+        await typeMessage(container, messages[i]);
+      }
+
+      document.querySelector("#thank-you-button").style.display = "inline-block";
+    }
+
+    function typeMessage(container, message) {
+      return new Promise(resolve => {
+        const p = document.createElement("p");
+        container.appendChild(p);
+        let i = 0;
+
+        function typeChar() {
+          if (i < message.length) {
+            p.textContent += message[i];
+            i++;
+            setTimeout(typeChar, 50); // Kecepatan mengetik per karakter (50ms)
+          } else {
+            resolve();
+          }
+        }
+
+        typeChar();
+      });
+    }
   </script>
 </body>
 </html>
